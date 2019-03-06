@@ -27,9 +27,10 @@ export default class GameContainer extends React.Component {
     var ohms;
     var score = 0;
     var scoreText;
-    var gameOver = false;
     var timedEvent;
     var timeText;
+    var gameOver = false;
+
 
     new Phaser.Game(config);
 
@@ -53,7 +54,7 @@ export default class GameContainer extends React.Component {
         fill: '#000'
       });
 
-      timedEvent = this.time.delayedCall(120000, onEvent, [], this);
+      timedEvent = this.time.delayedCall(5000, onEvent, [], this);
 
 
       player = this.physics.add.sprite(75, 625, 'player').setInteractive();
@@ -87,6 +88,24 @@ export default class GameContainer extends React.Component {
       });
 
       this.physics.add.overlap(player, ohms, collectOhms, null, this);
+
+      function collectOhms(player, ohms) {
+
+        ohms.disableBody(true, true);
+  
+        score += 10;
+        scoreText.setText('Score: ' + score);
+  
+        // if (ohms.countActive(true) === 0) {
+  
+        //   ohms.children.iterate(function (child) {
+        //     child.enableBody(true, child.x, 0, true, true);
+        //   });
+  
+        //   gameOver = true;
+  
+        // }
+      }
     }
 
     function update() {
@@ -95,26 +114,18 @@ export default class GameContainer extends React.Component {
 
     }
 
-    function collectOhms(player, ohms) {
+    
 
-      ohms.disableBody(true, true);
-
-      score += 10;
-      scoreText.setText('Score: ' + score);
-
-      // if (ohms.countActive(true) === 0) {
-
-      //   ohms.children.iterate(function (child) {
-      //     child.enableBody(true, child.x, 0, true, true);
-      //   });
-
-      //   gameOver = true;
-
-      // }
-    }
+    var gameOverText
 
     function onEvent () {
-      this.gameOver = true
+
+      gameOver = true
+      gameOverText = this.add.text(30, 270, 'GOOD JOB!', {
+        fontSize: '64px',
+        fill: '#000'
+      });
+
     }
 
   }
