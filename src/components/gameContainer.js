@@ -5,11 +5,14 @@ export default class GameContainer extends React.Component {
   componentDidMount() {
     var config = {
       type: Phaser.AUTO,
+      pixelArt: true,
       width: 400,
       height: 700,
+      parent: "phaser-game",
       physics: {
         default: 'arcade',
         arcade: {
+          gravity: { y: 0 },
           debug: false
         }
       },
@@ -19,6 +22,12 @@ export default class GameContainer extends React.Component {
         update: update
       }
     };
+
+    var player;
+    var ohms;
+    var score = 0;
+    var scoreText;
+    var gameOver = false;
 
     new Phaser.Game(config);
 
@@ -33,18 +42,10 @@ export default class GameContainer extends React.Component {
       });
     }
 
-    var player;
-    var ohms;
-    // var cursors;
-    var score = 0;
-    var scoreText;
-
-
     function create() {
+
       this.add.image(200, 350, 'stage');
-      // this.add.image(200, 350, 'pohm');
-      // this.add.image(300, 525, 'oohm');
-      // this.add.image(100, 175, 'gohm');
+
       player = this.physics.add.sprite(75, 625, 'player').setInteractive();
 
       this.input.on('pointermove', function (pointer) {
@@ -55,7 +56,7 @@ export default class GameContainer extends React.Component {
 
       ohms = this.physics.add.group({
         key: 'gohm',
-        repeat: 7,
+        repeat: 8,
         setXY: {
           x: 40,
           y: 70,
@@ -70,31 +71,38 @@ export default class GameContainer extends React.Component {
 
       })
 
-      this.physics.add.overlap(player, ohms, collectOhms, null, this);
-
       scoreText = this.add.text(0, 0, 'score: 0', {
         fontSize: '16px',
         fill: '#000'
       });
+
+      this.physics.add.overlap(player, ohms, collectOhms, null, this);
+    }
+
+    function update() {
+
+      if (gameOver) {
+        return
+      }
+
     }
 
     function collectOhms(player, ohms) {
+
       ohms.disableBody(true, true);
 
       score += 10;
       scoreText.setText('Score: ' + score);
 
       // if (ohms.countActive(true) === 0) {
+
       //   ohms.children.iterate(function (child) {
-
       //     child.enableBody(true, child.x, 0, true, true);
-
       //   });
+
+      //   gameOver = true;
+
       // }
-    }
-
-    function update() {
-
     }
   }
 
