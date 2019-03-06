@@ -69,6 +69,7 @@ export default class GameContainer extends React.Component {
       ohms = this.physics.add.group({
         key: 'gohm',
         frameQuantity: 10,
+        // this scale does not work
         scale: {
           randFloat: [0.5, 1.5]
         }
@@ -78,23 +79,6 @@ export default class GameContainer extends React.Component {
 
       //  Randomly position the sprites within the rectangle
       Phaser.Actions.RandomRectangle(ohms.getChildren(), rect);
-
-      // ohms = this.physics.add.group({
-      //   key: 'gohm',
-      //   repeat: 8,
-      //   setXY: {
-      //     x: 40,
-      //     y: 70,
-      //     stepX: 40,
-      //     stepY: 70
-      //   }
-      // })
-
-      // ohms.children.iterate(function (child) {
-
-      //   child.setBounceY(Phaser.Math.FloatBetween(0.5, 0.9))
-
-      // })
 
       scoreText = this.add.text(0, 0, 'score: 0', {
         fontSize: '16px',
