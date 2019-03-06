@@ -28,6 +28,8 @@ export default class GameContainer extends React.Component {
     var score = 0;
     var scoreText;
     var gameOver = false;
+    var timedEvent;
+    var timeText;
 
     new Phaser.Game(config);
 
@@ -45,6 +47,14 @@ export default class GameContainer extends React.Component {
     function create() {
 
       this.add.image(200, 350, 'stage');
+
+      timeText = this.add.text(300, 0, '', {
+        fontSize: '16px',
+        fill: '#000'
+      });
+
+      timedEvent = this.time.delayedCall(120000, onEvent, [], this);
+
 
       player = this.physics.add.sprite(75, 625, 'player').setInteractive();
 
@@ -81,9 +91,7 @@ export default class GameContainer extends React.Component {
 
     function update() {
 
-      if (gameOver) {
-        return
-      }
+      timeText.setText('Time: ' + timedEvent.getElapsedSeconds().toString().substr(0, 3));
 
     }
 
@@ -104,6 +112,11 @@ export default class GameContainer extends React.Component {
 
       // }
     }
+
+    function onEvent () {
+      this.gameOver = true
+    }
+
   }
 
 
