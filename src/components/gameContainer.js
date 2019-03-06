@@ -12,7 +12,9 @@ export default class GameContainer extends React.Component {
       physics: {
         default: 'arcade',
         arcade: {
-          gravity: { y: 0 },
+          gravity: {
+            y: 0
+          },
           debug: false
         }
       },
@@ -30,7 +32,6 @@ export default class GameContainer extends React.Component {
     var timedEvent;
     var timeText;
     var gameOver = false;
-
 
     new Phaser.Game(config);
 
@@ -62,25 +63,38 @@ export default class GameContainer extends React.Component {
       this.input.on('pointermove', function (pointer) {
         player.x = pointer.x;
         player.y = pointer.y
-
       });
 
+      //  Create 10 sprites (they all start life at 0x0)
       ohms = this.physics.add.group({
         key: 'gohm',
-        repeat: 8,
-        setXY: {
-          x: 40,
-          y: 70,
-          stepX: 40,
-          stepY: 70
+        frameQuantity: 10,
+        scale: {
+          randFloat: [0.5, 1.5]
         }
-      })
+      });
 
-      ohms.children.iterate(function (child) {
+      var rect = new Phaser.Geom.Rectangle(0, 0, 400, 700);
 
-        child.setBounceY(Phaser.Math.FloatBetween(0.5, 0.9))
+      //  Randomly position the sprites within the rectangle
+      Phaser.Actions.RandomRectangle(ohms.getChildren(), rect);
 
-      })
+      // ohms = this.physics.add.group({
+      //   key: 'gohm',
+      //   repeat: 8,
+      //   setXY: {
+      //     x: 40,
+      //     y: 70,
+      //     stepX: 40,
+      //     stepY: 70
+      //   }
+      // })
+
+      // ohms.children.iterate(function (child) {
+
+      //   child.setBounceY(Phaser.Math.FloatBetween(0.5, 0.9))
+
+      // })
 
       scoreText = this.add.text(0, 0, 'score: 0', {
         fontSize: '16px',
@@ -92,40 +106,40 @@ export default class GameContainer extends React.Component {
       function collectOhms(player, ohms) {
 
         ohms.disableBody(true, true);
-  
+
         score += 10;
         scoreText.setText('Score: ' + score);
-  
+
         // if (ohms.countActive(true) === 0) {
-  
-        //   ohms.children.iterate(function (child) {
-        //     child.enableBody(true, child.x, 0, true, true);
-        //   });
-  
-        //   gameOver = true;
-  
+
+        //   return Phaser.Actions.RandomRectangle(ohms.getChildren(), rect);
+
         // }
       }
     }
 
     function update() {
 
+      if (gameOver) {
+        return;
+      }
+
       timeText.setText('Time: ' + timedEvent.getElapsedSeconds().toString().substr(0, 3));
 
     }
 
-    
-
     var gameOverText
 
-    function onEvent () {
+    function onEvent() {
+
+      this.physics.pause();
 
       gameOver = true
+
       gameOverText = this.add.text(30, 270, 'GOOD JOB!', {
         fontSize: '64px',
         fill: '#000'
       });
-
     }
 
   }
