@@ -21,8 +21,8 @@ export default class GameContainer extends React.Component {
     };
 
     var player;
-    var game = new Phaser.Game(config);
-    var pointer;
+    new Phaser.Game(config);
+    // var pointer;
 
     function preload() {
       this.load.image('sky', 'assets/sky.png');
